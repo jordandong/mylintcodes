@@ -13,6 +13,21 @@ class Solution {
     // param n : description of n
     // return: description of return 
     long long trailingZeros(long long n) {
+        long long res = 0;
+        while(n){
+            long long t = n/5;
+            res+=t;
+            n = t;
+        }
+        return res;
+    }
+};
+
+class Solution {
+ public:
+    // param n : description of n
+    // return: description of return 
+    long long trailingZeros(long long n) {
         double x = 1;
         long long base = (long long)pow(5, x);
         long long res = 0;
