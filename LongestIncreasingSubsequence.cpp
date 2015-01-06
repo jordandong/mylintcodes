@@ -15,6 +15,52 @@ What's the definition of longest increasing subsequence?
     * https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
 */
 
+// 10ms, T: <O(nlogn)  S:O(n)
+class Solution {
+public:
+    /**
+     * @param nums: The integer array
+     * @return: The length of LIS (longest increasing subsequence)
+     */
+     int longestIncreasingSubsequence(vector<int> nums) {
+        // write your code here
+        int sz = nums.size();
+        if(sz == 0 || sz == 1)
+            return sz;
+
+        vector<int> lis;
+        lis.push_back(nums[0]);
+        
+        for(int i = 1; i < sz; i++){
+            if(nums[i] >= lis.back()){
+                lis.push_back(nums[i]);
+            }else{
+                int hi = lis.size() - 1;
+                int lo = 0;
+                
+                while(lo < hi){
+                    int mid = lo + (hi - lo)/2;
+                    if(lis[mid] <= nums[i] && nums[i] < lis[mid + 1]){
+                        //lis[mid + 1] = nums[i];
+                        lo = mid + 1;
+                        break;
+                    }
+                    if(lis[mid] <= nums[i]){
+                        lo = mid + 1;
+                    }else{
+                        hi = mid;
+                    }
+                }
+                lis[lo] = nums[i];
+            }
+        }
+        
+        return lis.size();
+    }
+
+};
+
+//10ms, T: O(nlogn) < O(n^2)  S: O(n)
 class Solution {
 public:
     /**
@@ -46,6 +92,7 @@ public:
     }
 };
 
+//12ms,  T:O(n^2) S: O(n)
 class Solution {
 public:
     /**
