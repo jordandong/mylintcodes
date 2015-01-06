@@ -21,6 +21,37 @@ public:
      * @param nums: The integer array
      * @return: The length of LIS (longest increasing subsequence)
      */
+     int longestIncreasingSubsequence(vector<int> nums) {
+        // write your code here
+        int sz = nums.size();
+        if(sz == 0 || sz == 1)
+            return sz;
+
+        vector<int> lis;
+        lis.push_back(nums[0]);
+        
+        for(int i = 1; i < sz; i++){
+            if(nums[i] >= lis.back()){
+                lis.push_back(nums[i]);
+            }else{
+                int z = lis.size();
+                int j = 0;
+                while(j < z && lis[j] <= nums[i])
+                    j++;
+                lis[j] = nums[i];
+            }
+        }
+        
+        return lis.size();
+    }
+};
+
+class Solution {
+public:
+    /**
+     * @param nums: The integer array
+     * @return: The length of LIS (longest increasing subsequence)
+     */
     int longestIncreasingSubsequence(vector<int> nums) {
         // write your code here
         int sz = nums.size();
