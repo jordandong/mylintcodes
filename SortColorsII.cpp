@@ -28,7 +28,10 @@ public:
         
         // write your code here
         //T : O(n), S : O(1)
-        //Cannot one case : handle k > colors.size(). Cannot do it in place for this case
+        //Cannot pass two cases :
+        //handle k > colors.size(). 
+        //Also, assume each color must present at least once. Otherwise overwriting may happen.
+        //These two cases cannot do it in place for this case
         int sz = colors.size();
         int i = 0;
         while(i < sz){
