@@ -29,42 +29,39 @@ public:
      */
     ListNode *partition(ListNode *head, int x) {
         // write your code here
-                  // write your code here
         ListNode* l_h = NULL;
         ListNode* l_t = NULL;
         ListNode* g_h = NULL;
-	    ListNode* g_t = NULL;
+        ListNode* g_t = NULL;
     	
     	while(head){
-	    	if(head->val < x){
-		    	if(!l_h){
-			    	l_h = head;
-				    l_t = l_h;
-			    }else{
-				    l_t->next = head;
-				    l_t = l_t->next;
-			    }
-	    	}else{
-		    	if(!g_h){
-			    	g_h = head;
-				    g_t = g_h;
-		    	}else{
-			    	g_t->next = head;
-				    g_t = g_t->next;
-			    }
-		    }
-		    head = head->next;
-	    }
+    	    if(head->val < x){
+                if(!l_h){
+                    l_h = head;
+                    l_t = l_h;
+                }else{
+                    l_t->next = head;
+                    l_t = l_t->next;
+                }
+            }else{
+                if(!g_h){
+                    g_h = head;
+                    g_t = g_h;
+               }else{
+                   g_t->next = head;
+                   g_t = g_t->next;
+               }
+            }
+            head = head->next;
+        }
 
-    	if(l_h){
-	    	l_t->next = g_h;
-    	}else{
-	    	l_h = g_h;
-    	}
-    	
-    	if(g_t)
-	        g_t->next = NULL;
-	        
-	    return l_h;
+        if(l_h){
+            l_t->next = g_h;
+        }else{
+            l_h = g_h;
+        }
+        if(g_t)
+            g_t->next = NULL;
+        return l_h;
     }
 };
