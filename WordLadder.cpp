@@ -34,11 +34,11 @@ public:
             return cnt;
         
         stk[cnt%2].push(start);
+        dict.erase(start);//if don't erase dict, then need to record visited words
         while(stk[cnt%2].size()){
             string cur_str = stk[cnt%2].top();
             stk[cnt%2].pop();
-            dict.erase(cur_str);//if don't erase dict, then need to record visited words
-            
+
             for(int i = 0; i < cur_str.length(); i++){
                 char t = cur_str[i];
                 for(char c = 'a'; c <= 'z'; c++){
@@ -46,8 +46,10 @@ public:
                         cur_str[i] = c;
                         if(cur_str.compare(end) == 0)
                             return cnt + 1;
-                        if(dict.find(cur_str) != dict.end())
+                        if(dict.find(cur_str) != dict.end()){
                             stk[(cnt+1)%2].push(cur_str);
+                            dict.erase(cur_str);//if don't erase dict, then need to record visited words
+                        }
                         cur_str[i] = t;
                     }
                 }
