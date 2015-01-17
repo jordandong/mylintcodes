@@ -104,7 +104,7 @@ public:
 
 
 /*
-To my suprise, below codes is able to pass al the OJ test cases, but the codes cannot handle large number and be not accurate.
+To my suprise, below codes is able to pass all the OJ test cases, but the codes cannot handle large number and be not accurate.
 Looks like the OJ test cases only consdier 32 bits long and for decimal parts, it is not accurate.
 It is using system convert func to place the decimial part into 32 bits double variable which already make it unaccurately.
 Not sure why it is giving string as input if we don't need handle overflow cases. VERY BAD OJ question.
