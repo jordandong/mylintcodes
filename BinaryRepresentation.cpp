@@ -101,3 +101,73 @@ public:
             n2.erase(len - 1);
     }
 };
+
+
+/*
+To my suprise, below codes is able to pass al the OJ test cases, but the codes cannot handle large number and be not accurate.
+Looks like the OJ test cases only consdier 32 bits long and for decimal parts, it is not accurate.
+It is using system convert func to place the decimial part into 32 bits double variable which already make it unaccurately.
+Not sure why it is giving string as input if we don't need handle overflow cases. VERY BAD OJ question.
+*/
+class Solution {
+public:
+    /**
+     *@param n: Given a decimal number that is passed in as a string
+     *@return: A string
+     */
+    string binaryRepresentation(string n) {
+        // wirte your code here
+        string n1="0", b1="",n2="0", b2="";
+        size_t ret = n.find('.');
+        if(ret == string::npos){
+            n1 = n;
+        }else{
+            n1 = n.substr(0, ret);
+            //n2 = n.substr(ret + 1);
+            n2 = n.substr(ret);
+        }
+        
+        int integer = 0;
+        int base = 1;
+        for(int i = n1.length() - 1; i >= 0; i--){
+            integer+= (n1[i] - '0')*base;
+            base*=10;
+        }
+        
+        double decimal = 0.0;
+        /*
+        double base1 = 0.1;
+        for(int i = 0; i < n2.length(); i++){
+            decimal+= (n2[i] - '0')*base1;
+            base1/=10;
+        }*/
+        decimal = strtod(n2.c_str(), NULL);
+        
+        while(integer > 0){
+            if(integer&0x00000001){
+                b1 = "1" + b1;
+            }else{
+                b1 = "0" + b1;
+            }
+            integer>>=1;
+        }
+        
+        while(decimal > 0.0){
+            if(b2.size() > 32)
+                return "ERROR";
+            decimal*=2;
+            if(decimal >= 1.0){
+                b2+="1";
+                decimal-=1.0;
+            }else{
+                b2+="0";
+            }
+        }
+        
+        if(b1.size() == 0)
+            b1+="0";
+
+        return b2.size() ? b1+"."+b2:b1;
+        
+    }
+};
