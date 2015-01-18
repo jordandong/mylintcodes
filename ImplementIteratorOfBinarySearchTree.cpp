@@ -63,11 +63,9 @@ public:
         TreeNode* res = cur;
         if(cur){
             cur = cur->right; // always goto next node
-            if(cur && res != cur->left){ // if left node != previous node
-                if(!cur->left || cur->left->val > res->val){ //if left node is unvisited
-                    while(cur && cur->left)
+            if(cur && (!cur->left || cur->left->val > res->val)){ //if left node is unvisited
+                  while(cur && cur->left)
                         cur = cur->left;
-                }
             }
         }
         return res;
