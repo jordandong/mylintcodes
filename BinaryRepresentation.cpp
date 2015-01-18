@@ -46,20 +46,20 @@ public:
         while(n1.size()){
             str_divide_mod(n1, mod);
             b1 = mod + b1;
-        }
-
+	    }
+        
         if(ret == npos)
             return b1;
         
         int n2_sz = n2.size() - 1;
         int count = 0;
-        while((n2.size() > 1)){
+	    while((n2.size() > 1)){
             if(count >= n2_sz)
                 return "ERROR";
             str_multiple_getones(n2, ones);
             b2+=ones;
             count++;
-        }
+	    }
         while(b2[b2.length() - 1] == '0')
             b2.erase(b2.length() - 1);
         return b2.size()?b1+"."+b2:b1;
@@ -90,7 +90,7 @@ public:
             int num = n2[i] - '0';
             num*=2;
             num+=carry;
-            n2[i] = num + '0';
+            n2[i] = num%10 + '0';
             carry = num/10;
         }
         if(n2[0] == '1'){
