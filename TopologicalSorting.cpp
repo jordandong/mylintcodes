@@ -32,6 +32,46 @@ Can you do it in both BFS and DFS?
  *     DirectedGraphNode(int x) : label(x) {};
  * };
  */
+ /**
+ * Definition for Directed graph.
+ * struct DirectedGraphNode {
+ *     int label;
+ *     vector<DirectedGraphNode *> neighbors;
+ *     DirectedGraphNode(int x) : label(x) {};
+ * };
+ */
+ 
+ //Optimized
+class Solution {
+public:
+    /**
+     * @param graph: A list of Directed graph node
+     * @return: Any topological order for the given graph.
+     */
+    vector<DirectedGraphNode*> topSort(vector<DirectedGraphNode*> graph) {
+        // write your code here
+        unordered_map<DirectedGraphNode*, bool> v;
+        vector<DirectedGraphNode*> res;
+
+        for(DirectedGraphNode* e : graph){
+            if(v.find(e) == v.end())
+                topSortDFS(e, v, res);
+        }
+	    reverse(res.begin(), res.end());
+        return res;
+    }
+    
+    void topSortDFS(DirectedGraphNode* node, unordered_map<DirectedGraphNode*, bool> &v, vector<DirectedGraphNode*> &res) {
+        if(v.find(node) != v.end())
+           return;
+
+        v[node] = true;
+        for(int i = 0; i < node->neighbors.size(); i++)
+            topSortDFS(node->neighbors[i], v, res);
+        res.push_back(node);
+    }
+};
+ 
 class Solution {
 public:
     /**
