@@ -57,13 +57,13 @@ public:
             if(v.find(e) == v.end())
                 topSortDFS(e, v, res);
         }
-	    reverse(res.begin(), res.end());
+        reverse(res.begin(), res.end());
         return res;
     }
     
     void topSortDFS(DirectedGraphNode* node, unordered_map<DirectedGraphNode*, bool> &v, vector<DirectedGraphNode*> &res) {
         if(v.find(node) != v.end())
-           return;
+            return;
 
         v[node] = true;
         for(int i = 0; i < node->neighbors.size(); i++)
