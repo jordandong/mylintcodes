@@ -21,17 +21,18 @@ public:
         int sz = A.size();
         int i = 0;
         while(k){
-            i = 0;
             while(i < sz - 1 && A[i] <= A[i+1]) // find the first one bigger than the right digit
                 i++;
-            if(i == sz - 1){ // in sorted order, delete the tailing digits
+            if(i == sz - 1){ // in increasing order, delete the tailing digits
                 sz -= k;
                 k = 0;
             }else{
-                while(i < sz -1){ // remove the found digit
-                    A[i] = A[i+1];
-                    i++;
+                int j = i;
+                while(j < sz -1){ // remove the found digit
+                    A[j] = A[j+1];
+                    j++;
                 }
+                i--;
                 k--;
                 sz--;
             }
