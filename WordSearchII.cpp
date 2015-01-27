@@ -108,3 +108,75 @@ public:
         sol.erase(sol.length()-1);
     } 
 };
+
+/*
+"Memory Limit Exceeded"
+8 / 19 test cases passed.
+Input
+["abcde","tsrqf","mnopg","lkjih"], {"abcdefghijklmnopqrst","lkjihmonpgfqrstabcde","mo","mn","mnopg","abcde","kj","op"}
+Expected
+["abcde","abcdefghijklmnopqrst","kj","mn","mnopg","op"]
+*/
+//If there are a lot of words and small board, this is better. Using board to build trie consumes lots of memory since there are too many possible words
+class TrieNode {
+public:
+    TrieNode *next[26];
+    
+    TrieNode(){
+        memset(next, 0, 26*sizeof(TrieNode*));
+    }
+    
+    ~TrieNode() {
+        for(int i = 0; i < 26; i++){
+            if(next[i])
+                delete next[i];
+        }
+    }
+    
+    bool Search(string &s, int idx) {
+        if(idx == s.length())
+            return true;
+
+        if(next[s[idx] - 'a'])
+            return next[s[idx]-'a']->Search(s, idx + 1);
+        else
+            return false; 
+    }
+};
+
+class Solution {
+public:
+    /**
+     * @param board: A list of lists of character
+     * @param words: A list of string
+     * @return: A list of string
+     */
+    vector<string> wordSearchII(vector<vector<char> > &board, vector<string> &words) {
+        vector<string> res;
+        TrieNode node; 
+        for(int i = 0; i < board.size(); i++)
+            for(int j = 0; j< board[0].size(); j++)
+                wordSearchIIHelper(board, &node, i, j); 
+                
+        for(int i = 0; i < words.size(); i++) 
+            if(node.Search(words[i], 0))
+                res.push_back(words[i]);
+        return res;
+    }
+    
+    void wordSearchIIHelper(vector<vector<char> > &board, TrieNode *node, int i, int j){
+        if (i < 0 || i >= board.size() || j < 0 || j >= board[0].size() || board[i][j] == '*')
+            return;
+        
+        char tmp = board[i][j];
+        if(node->next[tmp - 'a'] == NULL)
+            node->next[tmp - 'a'] = new TrieNode();
+            
+        board[i][j] = '*';
+        wordSearchIIHelper(board, node->next[tmp - 'a'], i + 1, j);  
+        wordSearchIIHelper(board, node->next[tmp - 'a'], i - 1 ,j);  
+        wordSearchIIHelper(board, node->next[tmp - 'a'], i, j + 1);  
+        wordSearchIIHelper(board, node->next[tmp - 'a'], i, j - 1);
+        board[i][j] = tmp;
+    } 
+};
