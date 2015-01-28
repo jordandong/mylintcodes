@@ -78,7 +78,6 @@ public:
                     break;
             }
         }
-
         findPath(pMap, end, path, res);
         for(int i = 0; i < res.size(); i++)
             reverse(res[i].begin(), res[i].end());
@@ -87,6 +86,8 @@ public:
 
     //reconstruct the path from end to start, DFS
     void findPath(unordered_map<string, vector<string> > &pMap, string &end, vector<string> &path, vector<vector<string>> &res) {
+        if(pMap.find(end) == pMap.end())
+            return;
         if(pMap[end][0] == end){
             path.push_back(end);
             res.push_back(path);
