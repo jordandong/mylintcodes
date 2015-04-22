@@ -19,6 +19,49 @@ Tags Expand
 Two Pointers Forward-Backward Traversal Array
 */
 
+//T: O(n), S: O(1)
+class Solution {
+public:
+    /**
+     * @param heights: a vector of integers
+     * @return: a integer
+     */
+    int trapRainWater(vector<int> &heights) {
+        // write your code here
+        int sz = heights.size();
+        if(sz <= 0)
+            return 0;
+        int res = 0;
+        int hi = 0, lo = 0;
+        
+        for(int i = 0; i < sz; i++)
+            hi = heights[i] > heights[hi] ? i : hi;
+        
+        int k = 0;
+        while(k < hi){
+            if(heights[k] >= heights[lo]){
+                lo = k;
+            }else{
+                res += heights[lo] - heights[k];
+            }
+            k++;
+        }
+        
+        lo = sz - 1;
+        k = sz - 1;
+        while(k > hi){
+            if(heights[k] >= heights[lo]){
+                lo = k;
+            }else{
+                res += heights[lo] - heights[k];
+            }
+            k--;
+        }
+        return res;
+    }
+};
+
+//T: O(n), S: O(n)
 class Solution {
 public:
     /**
