@@ -26,6 +26,80 @@ public:
      */
     int evaluateExpression(vector<string> &expression) {
         // write your code here
+        stack<string> op;
+        stack<double> val;
+        //convert into rPolish expression and calulate
+        for(auto &e : expression){
+            if(e == "("){
+                op.push(e);
+            }else if(e == "-" || e == "+"){
+                while(op.size() && (op.top() == "-" || op.top() == "*" || op.top() == "/")){
+                    evaluateExpressionHelper(op.top(), val);
+                    op.pop();
+                }
+                op.push(e);
+            } else if(e == "*" || e == "/"){
+                while(op.size() && (op.top() == "/")){
+                    evaluateExpressionHelper(op.top(), val);
+                    op.pop();
+                }
+                op.push(e);
+            }else if(e == ")"){
+                while(op.size() && op.top() != "("){
+                    evaluateExpressionHelper(op.top(), val);
+                    op.pop();
+                }
+                op.pop();
+            }else{
+                double num = 0;
+                bool sign = false;
+                for(auto &c : e){
+                    if(c == '-')
+                        sign = true;
+                    else
+                        num = 10*num + (double)(c - '0');
+                }
+                if(sign)
+                    num *= -1;
+                val.push(num);
+            }
+        }
+        while(op.size()){
+            evaluateExpressionHelper(op.top(), val);
+            op.pop();
+        }
+        
+        if(val.size())
+            return val.top();
+        else
+            return 0;
+    }
+    
+    void evaluateExpressionHelper(string &ops, stack<double> &val){
+        //Calulate rPolish expression
+        double a = val.top();
+        val.pop();
+        double b = val.top();
+        val.pop();
+        if(ops == "+")
+            val.push(b + a);
+        if(ops == "-")
+            val.push(b - a);
+        if(ops == "*")
+            val.push(b * a);
+        if(ops == "/")
+            val.push(b / a);
+    }
+};
+
+class Solution {
+public:
+    /**
+     * @param expression: a vector of strings;
+     * @return: an integer
+     */
+    int evaluateExpression(vector<string> &expression) {
+        // write your code here
         stack<string> stk;
         vector<string> rp;
 
