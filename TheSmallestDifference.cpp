@@ -9,7 +9,7 @@ O(n log n) time
 
 Tags Expand 
 Two Pointers Sort Array
-*/Given two array of integers(the first array is array A, the second array is array B), now we are going to find a element in array A which is A[i], and another element in array B which is B[j], so that the difference between A[i] and B[j] (|A[i] - B[j]|) is as small as possible, return their smallest difference.
+Given two array of integers(the first array is array A, the second array is array B), now we are going to find a element in array A which is A[i], and another element in array B which is B[j], so that the difference between A[i] and B[j] (|A[i] - B[j]|) is as small as possible, return their smallest difference.
 
 Example
 For example, given array A = [3,4,6,7], B = [2,3,8,9], return 0
@@ -19,6 +19,7 @@ O(n log n) time
 
 Tags Expand 
 Two Pointers Sort Array
+*/
 
 class Solution {
 public:
