@@ -32,6 +32,116 @@ Tags Expand
 Binary Search LintCode Copyright Matrix
 */
 
+//O(max(M, N))
+class Solution {
+public:
+    /**
+     * @param A: An integer matrix
+     * @return: The index of the peak
+     */
+    vector<int> findPeakII(vector<vector<int> > A) {
+        // write your code here
+        int M = A.size();
+        if (M == 0)
+            return {};
+        int N = A[0].size();
+        if (N == 0)
+            return {};
+        int i_s = 0, i_e = M - 1;
+        int j_s = 0, j_e = N - 1;
+        
+        while (true) {
+            int i_m = i_s + (i_e - i_s)/2;
+            int j_m = j_s + (j_e - j_s)/2;
+            int mx = A[i_s][j_s];
+            int mx_i = i_s, mx_j = j_s;
+            //max on boarder
+            for (int i = i_s; i <= i_e; i++){
+                if (A[i][j_s] > mx){
+                    mx = A[i][j_s];
+                    mx_i = i;
+                    mx_j = j_s;
+                }
+                if (A[i][j_e] > mx){
+                    mx = A[i][j_e];
+                    mx_i = i;
+                    mx_j = j_e;
+                }
+            }
+            for (int j = j_s; j <= j_e; j++){
+                if (A[i_s][j] > mx){
+                    mx = A[i_s][j];
+                    mx_i = i_s;
+                    mx_j = j;
+                }
+                if (A[i_e][j] > mx){
+                    mx = A[i_e][j];
+                    mx_i = i_e;
+                    mx_j = j;
+                }
+            }
+            for (int i = i_s; i <= i_e; i++){
+                if (A[i][j_m] > mx){
+                    mx = A[i][j_m];
+                    mx_i = i;
+                    mx_j = j_m;
+                }
+            }
+            for (int j = j_s; j <= j_e; j++){
+                if (A[i_m][j] > mx){
+                    mx = A[i_m][j];
+                    mx_i = i_m;
+                    mx_j = j;
+                }
+            }
+            //find the bigger one and move to one of the four sub squares
+            if (mx_i - 1 > i_s && A[mx_i - 1][mx_j] > mx ) {
+                if(mx_i == i_m)
+                    i_e = i_m;
+                else
+                    i_s = i_m;
+
+                if(mx_j < j_m)
+                    j_e = j_m;
+                else
+                    j_s = j_m;
+            } else if (mx_i + 1 < i_e  && A[mx_i + 1][mx_j] > mx ) {
+                if(mx_i == i_m)
+                    i_s = i_m;
+                else
+                    i_e = i_m;
+
+                if(mx_j < j_m)
+                    j_e = j_m;
+                else
+                    j_s = j_m;
+            } else if (mx_j - 1 > j_s && A[mx_i][mx_j - 1] > mx ){
+                if(mx_j == j_m)
+                    j_e = j_m;
+                else
+                    j_s = j_m;
+    
+                if(mx_i < i_m)
+                    i_e = i_m;
+                else
+                    i_s = i_m;
+            } else if (mx_j + 1 < j_e && A[mx_i][mx_j + 1] > mx ){
+                if(mx_j == j_m)
+                    j_s = j_m;
+                else
+                    j_e = j_m;
+
+                if(mx_i < i_m)
+                    i_e = i_m;
+                else
+                    i_s = i_m;
+            } else {
+                return {mx_i, mx_j};
+            }
+        }
+    }
+};
+
 //O(min(M, N)*log(max(M, N)))
 class Solution {
 public:
