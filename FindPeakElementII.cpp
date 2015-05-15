@@ -48,12 +48,13 @@ public:
         if (N == 0)
             return {};
 
+        int mid, mx, mx_i, mx_j;
         if (N > M) {
             int lo = 0, hi = N - 1;
             while (lo <= hi) { //O(logN)
-                int mid = lo + (hi - lo)/2;
-                int mx = A[0][mid];
-                int mx_i = 0;
+                mid = lo + (hi - lo)/2;
+                mx = A[0][mid];
+                mx_i = 0;
                 for (int i = 0; i < M; i++) {//O(M)
                     if (A[i][mid] > mx) {
                         mx = A[i][mid];
@@ -67,12 +68,13 @@ public:
                 else
                     return {mx_i, mid};	
             }
+            return {mx_i, mid};	
         } else {
             int lo = 0, hi = M - 1;
             while (lo <= hi) { //O(logM)
-                int mid = lo + (hi - lo)/2;
-                int mx = A[mid][0];
-                int mx_j = 0;
+                mid = lo + (hi - lo)/2;
+                mx = A[mid][0];
+                mx_j = 0;
                 for (int j = 0; j < N; j++) {//O(N)
                     if (A[mid][j] > mx) {
                         mx = A[mid][j];
@@ -86,6 +88,7 @@ public:
                 else
                     return {mid, mx_j};	
             }
+            return {mid, mx_j};	
         }
     }
 };
