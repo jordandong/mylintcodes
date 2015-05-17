@@ -33,10 +33,13 @@ public:
     Solution operator=(const Solution &object) {
         // write your code here
         if(this != &object) {
-            int sz = strlen(object.m_pData);
             free(this->m_pData);
-            this->m_pData = new char[sz + 1];
-            memcpy(this->m_pData, object.m_pData, sz + 1);
+            this->m_pData = NULL;
+            if(object.m_pData != NULL) {
+                int sz = strlen(object.m_pData);
+                this->m_pData = new char[sz + 1];
+                memcpy(this->m_pData, object.m_pData, sz + 1);
+            }
         }
     }
 };
