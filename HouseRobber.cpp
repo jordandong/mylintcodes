@@ -25,7 +25,7 @@ public:
         long long rob_mx = 0, no_rob_mx = 0;
         for (auto e : A) {
             long long tmp_rob_mx = rob_mx;
-            rob_mx = max(rob_mx, no_rob_mx + e);
+            rob_mx = no_rob_mx + e;
             no_rob_mx = max(tmp_rob_mx, no_rob_mx);
         }
         return max(rob_mx, no_rob_mx);
