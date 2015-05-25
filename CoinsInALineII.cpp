@@ -47,7 +47,7 @@ public:
         vector<int> dp(N + 4, 0);
         int sum = 0;
         //take one plus min taken in next step OR take two plus min taken in next step
-        //the other player is as smart as you, he will choose take onr or two so that you always have the min left
+        //the other player is as smart as you, he will choose take one or two so that you always have the min left
         for (int i = N - 1; i >= 0; i--) {
             sum += values[i];
             dp[i] = max(values[i] + min(dp[i + 2], dp[i + 3]), 
