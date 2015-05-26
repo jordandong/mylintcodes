@@ -30,6 +30,34 @@ public:
             return 0;
         int res = 0;
         sort(S.begin(), S.end());
+        for (int k = N - 1; k >= 0; k--) {
+            int i = 0, j = k - 1;
+            while (i < j) {
+                    if (S[i] + S[j] <= S[k]) {
+                        i++;
+                    } else {
+                        res += j - i;
+                        j--;
+                    }
+            }
+        }
+        return res;
+    }
+};
+
+class Solution {
+public:
+    /**
+     * @param S: A list of integers
+     * @return: An integer
+     */
+    int triangleCount(vector<int> &S) {
+        // write your code here
+        int N = S.size();
+        if (N == 0)
+            return 0;
+        int res = 0;
+        sort(S.begin(), S.end());
         for (int i = 0; i < N; i++) {
             for (int j = i + 1; j < N; j++) {
                 int twosum = S[i] + S[j];
