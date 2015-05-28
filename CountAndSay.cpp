@@ -14,6 +14,8 @@ Given n = 5, return "111221".
 Note
 The sequence of integers will be represented as a string.
 
+Tags Expand 
+String
 */
 
 class Solution {
