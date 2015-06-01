@@ -26,11 +26,11 @@ public:
     string simplifyPath(string& path) {
         // Write your code here
         vector<string> dirs;
+        
         auto i = path.begin();
         while (i != path.end()) {
-            ++i;  // make sure i is not "/"
-            auto j = find(i, path.end(), '/');
-            string dir = string(i, j);
+            auto j = find(i, path.end(), '/'); //find first
+            string dir = string(i, j); //not include j
 
             if(dir.size() && dir != ".") {
                 if(dir == "..") {
@@ -40,7 +40,7 @@ public:
                     dirs.push_back(dir);
                 }
             }
-            i = j;
+            i = ( j == path.end() ? j : j + 1);
         }
 
         if(dirs.empty())
