@@ -40,7 +40,7 @@ public:
                     dirs.push_back(dir);
                 }
             }
-            i = ( j == path.end() ? j : j + 1);
+            i = ( j == path.end() ? j : j + 1); //move forward
         }
 
         if(dirs.empty())
