@@ -5,11 +5,15 @@ The queue should support push(element), pop() and top() where pop is pop the fir
 
 Both pop and top methods should return the value of first element.
 
+Have you met this question in a real interview? Yes
 Example
 For push(1), pop(), push(2), push(3), top(), pop(), you should return 1, 2 and 2
 
 Challenge
 implement it by two stacks, do not use any other data structure and push, pop and top should be O(1) by AVERAGE.
+
+Tags Expand 
+LintCode Copyright Stack Queue
 */
 
 class Queue {
