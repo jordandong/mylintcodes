@@ -1,14 +1,14 @@
 /*
-Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+Given a string s and a dictionary of words dict, determine if s can be break into a space-separated sequence of one or more dictionary words.
 
+Have you met this question in a real interview? Yes
 Example
-Given
+Given s = "lintcode", dict = ["lint", "code"].
 
-s = "lintcode",
+Return true because "lintcode" can be break as "lint code".
 
-dict = ["lint", "code"].
-
-Return true because "lintcode" can be segmented as "lint code".
+Tags Expand 
+String Dynamic Programming
 */
 
 class Solution {
