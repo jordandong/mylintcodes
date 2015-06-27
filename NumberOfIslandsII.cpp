@@ -102,3 +102,108 @@ public:
         }
     }
 };
+
+//still TLE
+class Solution {
+public:
+    /**
+     * @param n an integer
+     * @param m an integer
+     * @param operators an array of point
+     * @return an integer array
+     */
+    vector<int> numIslands2(int n, int m, vector<Point>& operators) {
+        // Write your code here
+        int N = operators.size();
+        if(N == 0)
+            return {};
+        vector<vector<int>> mp(n, vector<int>(m, 0));
+        vector<int> res(N, 0);
+        int idx = 1;
+        
+        for (int i = 0; i < N; i++, idx++) {
+            int count = 1;
+            Point &p = operators[i];
+            if (mp[p.x][p.y]) {
+                res[i] = res[i - 1];
+                continue;
+            }
+            
+            if (p.x - 1 >= 0 && mp[p.x - 1][p.y]) {
+                if (mp[p.x][p.y] == 0) {
+                    mp[p.x][p.y] = mp[p.x - 1][p.y];
+                    count--;
+                } else if (mp[p.x][p.y] != mp[p.x - 1][p.y]) {
+                    numIslands2Helper(p.x - 1, p.y, mp[p.x][p.y], mp);
+                    count--;
+                }
+            }
+            
+            if (p.x + 1 < n && mp[p.x + 1][p.y]) {
+                if (mp[p.x][p.y] == 0) {
+                    mp[p.x][p.y] = mp[p.x + 1][p.y];
+                    count--;
+                } else if (mp[p.x][p.y] != mp[p.x + 1][p.y]) {
+                    numIslands2Helper(p.x + 1, p.y, mp[p.x][p.y], mp);
+                    count--;
+                }
+            }
+            
+            if (p.y - 1 >= 0 && mp[p.x][p.y - 1]) {
+                if (mp[p.x][p.y] == 0) {
+                    mp[p.x][p.y] = mp[p.x][p.y - 1];
+                    count--;
+                } else if (mp[p.x][p.y] != mp[p.x][p.y - 1]) {
+                    numIslands2Helper(p.x, p.y - 1, mp[p.x][p.y], mp);
+                    count--;
+                }
+            }
+            
+            if (p.y + 1 < m && mp[p.x][p.y + 1]) {
+                if (mp[p.x][p.y] == 0) {
+                    mp[p.x][p.y] = mp[p.x][p.y + 1];
+                    count--;
+                } else if (mp[p.x][p.y] != mp[p.x][p.y + 1]) {
+                    numIslands2Helper(p.x, p.y + 1, mp[p.x][p.y], mp);
+                    count--;
+                }
+            }
+            
+            if(mp[p.x][p.y] == 0)
+                mp[p.x][p.y] = idx;
+
+            if(i == 0)
+                res[i] = count;
+            else
+                res[i] = res[i - 1] + count;
+        }
+        return res;
+    }
+    
+    void numIslands2Helper(int i, int j, int idx, vector<vector<int>> &grid) {
+        queue<pair<int, int> > q;
+        q.push(make_pair(i, j));
+        grid[i][j] = idx;
+        while(q.size()){
+            int i = q.front().first;
+            int j = q.front().second;
+            q.pop();
+            if(i + 1 < grid.size() && grid[i + 1][j] && grid[i + 1][j] != idx){
+                grid[i + 1][j] = idx;
+                q.push(make_pair(i + 1, j));
+            }
+            if(i - 1 >= 0  && grid[i - 1][j] && grid[i - 1][j] != idx){
+                grid[i - 1][j] = idx;
+                q.push(make_pair(i - 1, j));
+            }
+            if(j + 1 < grid[0].size()  && grid[i][j + 1] && grid[i][j + 1] != idx){
+                grid[i][j + 1] = idx;
+                q.push(make_pair(i, j + 1));
+            }
+            if(j - 1 >= 0 && grid[i][j - 1] && grid[i][j - 1] != idx){
+                grid[i][j - 1] = idx;
+                q.push(make_pair(i, j - 1));
+            }
+        }
+    }
+};
