@@ -23,8 +23,6 @@ Union Find
  *     Point(int a, int b) : x(a), y(b) {}
  * };
  */
- 
- //TLE
 class Solution {
 public:
     /**
@@ -35,75 +33,62 @@ public:
      */
     vector<int> numIslands2(int n, int m, vector<Point>& operators) {
         // Write your code here
-        int N = operators.size();
-        if(N == 0)
-            return {};
-        vector<vector<int>> mp(n, vector<int>(m, 0));
-        vector<int> res(N, 0);
-        int idx = 1;
+        int number = 0;
+        vector<int> numbers;
+        unordered_map<int, int> sets;
+        const vector<pair<int, int>> directions{{0, -1}, {0, 1},{-1, 0}, {1, 0}};
         
-        for (int i = 0; i < N; i++, idx++) {
-            int count = 1;
-            Point &p = operators[i];
-            if (mp[p.x][p.y]) {
-                res[i] = res[i - 1];
-                continue;
+        for (const auto& oper : operators) {
+            const auto& node = make_pair(oper.x, oper.y);
+            //create a single set
+            sets[node_id(node, m)] = node_id(node, m);
+            //For each direction, count distinct islands.
+            unordered_set<int> neighbors;
+            for (const auto& d : directions) {
+                const auto& neighbor = make_pair(oper.x + d.first, oper.y + d.second);
+                if (neighbor.first >= 0 && neighbor.first < n &&
+                    neighbor.second >= 0 && neighbor.second < m &&
+                    sets.find(node_id(neighbor, m)) != sets.end()) {
+                    //already in the sets, update neighbor, each island has different key
+                    neighbors.insert(find_set(node_id(neighbor, m), sets));
+                }
             }
-            
-            mp[p.x][p.y] = idx;
-            if (p.x - 1 >= 0 && mp[p.x - 1][p.y] && mp[p.x - 1][p.y] != idx) {
-                count--;
-                numIslands2Helper(p.x - 1, p.y, idx, mp);
+            // For each direction, find and union.
+            for (const auto& d : directions) {
+                const auto& neighbor = make_pair(oper.x + d.first, oper.y + d.second);
+                if (neighbor.first >= 0 && neighbor.first < n &&
+                    neighbor.second >= 0 && neighbor.second < m &&
+                    sets.find(node_id(neighbor, m)) != sets.end()) {
+                    //already in the sets, union sperate sets
+                    union_set(node_id(node, m), node_id(neighbor, m), sets);
+                }
             }
-            if (p.x + 1 < n && mp[p.x + 1][p.y] && mp[p.x + 1][p.y] != idx) {
-                count--;
-                numIslands2Helper(p.x + 1, p.y, idx, mp);
-            }
-            if (p.y - 1 >= 0 && mp[p.x][p.y - 1] && mp[p.x][p.y - 1] != idx) {
-                count--;
-                numIslands2Helper(p.x, p.y - 1, idx, mp);
-            }
-            if (p.y + 1 < m && mp[p.x][p.y + 1] && mp[p.x][p.y + 1] != idx) {
-                count--;
-                numIslands2Helper(p.x, p.y + 1, idx, mp);
-            }
-            if(i == 0)
-                res[i] = count;
-            else
-                res[i] = res[i - 1] + count;
+            number += (1 - neighbors.size());
+            numbers.push_back(number);
         }
-        return res;
+        return numbers;
     }
-    
-    void numIslands2Helper(int i, int j, int idx, vector<vector<int>> &grid) {
-        queue<pair<int, int> > q;
-        q.push(make_pair(i, j));
-        grid[i][j] = idx;
-        while(q.size()){
-            int i = q.front().first;
-            int j = q.front().second;
-            q.pop();
-            if(i + 1 < grid.size() && grid[i + 1][j] && grid[i + 1][j] != idx){
-                grid[i + 1][j] = idx;
-                q.push(make_pair(i + 1, j));
-            }
-            if(i - 1 >= 0  && grid[i - 1][j] && grid[i - 1][j] != idx){
-                grid[i - 1][j] = idx;
-                q.push(make_pair(i - 1, j));
-            }
-            if(j + 1 < grid[0].size()  && grid[i][j + 1] && grid[i][j + 1] != idx){
-                grid[i][j + 1] = idx;
-                q.push(make_pair(i, j + 1));
-            }
-            if(j - 1 >= 0 && grid[i][j - 1] && grid[i][j - 1] != idx){
-                grid[i][j - 1] = idx;
-                q.push(make_pair(i, j - 1));
-            }
-        }
+
+    int node_id(const pair<int, int>& node, const int m) {
+        //make the node unique
+        return node.first * m + node.second;
+    }
+
+    int find_set(int x, unordered_map<int, int> &sets) {
+       if (sets[x] != x) //different nodes in the same set has the same key
+           sets[x] = find_set(sets[x], sets);
+       return sets[x];
+    }
+
+    void union_set(const int x, const int y, unordered_map<int, int> &sets) {
+        int x_key = find_set(x, sets);
+        int y_key = find_set(y, sets);
+        //different nodes in the same set has the same key
+        sets[min(x_key, y_key)] = max(x_key, y_key);
     }
 };
 
-//still TLE
+//update island idx for each union, TLE
 class Solution {
 public:
     /**
