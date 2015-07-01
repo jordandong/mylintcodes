@@ -20,7 +20,6 @@ Sort the element in the set in increasing order
 Tags Expand 
 Union Find
 */
-
 /**
  * Definition for Directed graph.
  * struct DirectedGraphNode {
@@ -29,6 +28,11 @@ Union Find
  *     DirectedGraphNode(int x) : label(x) {};
  * };
  */
+ 
+bool sort_nodes(const DirectedGraphNode* a, const DirectedGraphNode* b) {
+    return a->label < b->label;
+}
+
 class Solution {
 public:
     /**
@@ -36,49 +40,40 @@ public:
      * @return a connected set of a directed graph
      */
     vector<vector<int>> connectedSet2(vector<DirectedGraphNode*>& nodes) {
-        // Sort nodes by its index. Time: O(nlogn)
-        sort(nodes.begin(), nodes.end(),
-             [](const DirectedGraphNode* a, const DirectedGraphNode* b) {
-                return a->label < b->label;
-             });
-        
-        // The disjoint-set.
-        unordered_map<int, int> set;
-        // Initialize the disjoint-set.
-        for (const auto& node : nodes) {
-            set[node->label] = node->label;
-        }
-
-        // Union-Find each edge.
-        for (const auto& node : nodes) {
-            for (const auto& neighbor : node->neighbors) {
-                union_set(&set, node->label, neighbor->label);
-            }
-        }
-
-        // Group each component.
-        unordered_map<int, vector<int>> group;
-        for (const auto& node : nodes) {
-            group[find_set(node->label, &set)].emplace_back(node->label);
-        }
-
-        // Sort elements in each group.
+        unordered_map<int, int> sets;
+        unordered_map<int, vector<int>> comps;
         vector<vector<int>> result;
-        for (auto& kvp : group) {
-            result.emplace_back(move(kvp.second));
-        }
+
+        sort(nodes.begin(), nodes.end(), sort_nodes);
+        for (const auto& node : nodes) //each node is one set
+            sets[node->label] = node->label;
+
+        // Union each neighbor node for all nodes.
+        for (const auto& node : nodes)
+            for (const auto& neighbor : node->neighbors)
+                union_set(node->label, neighbor->label, sets);
+
+        // find different comps
+        for (const auto& node : nodes)
+            comps[find_set(node->label, sets)].push_back(node->label);
+
+        //output sorted vomp.
+        for (auto& e : comps)
+            result.push_back(e.second);
         return result;
     }
 
-    int find_set(int x, unordered_map<int, int> *set) {
-       if ((*set)[x] != x) {
-           (*set)[x] = find_set((*set)[x], set);  // path compression.
-       }
-       return (*set)[x];
+    int find_set(int x, unordered_map<int, int> &sets) {
+        //all the nodes in one set points to the same key
+        if (sets[x] != x)
+            sets[x] = find_set(sets[x], sets);
+        return sets[x];
     }
 
-    void union_set(unordered_map<int, int> *set, int x, int y) {
-        int x_root = find_set(x, set), y_root = find_set(y, set);
-        (*set)[min(x_root, y_root)] = max(x_root, y_root);
+    void union_set(int x, int y, unordered_map<int, int> &sets) {
+        int x_key = find_set(x, sets);
+        int y_key = find_set(y, sets);
+        //all the nodes in one set points to the same key
+        sets[min(x_key, y_key)] = max(x_key, y_key);
     }
 };
