@@ -11,6 +11,7 @@ Challenge
 Could you do this in O(n*k) time ?
 */
 
+//T: O(N * log(sum of pages)), S: O(1)
 class Solution {
 public:
     /**
