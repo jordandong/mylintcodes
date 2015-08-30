@@ -29,7 +29,6 @@ See wiki: Segment Tree Interval Tree
 Tags Expand 
 Segment Tree
 */
-
 /**
  * Definition of SegmentTreeNode:
  * class SegmentTreeNode {
@@ -60,11 +59,8 @@ public:
     }
     
     SegmentTreeNode* buildHelper(int start, int end, vector<int>& A, int &idx) {
-        if (start == end) {
-            SegmentTreeNode* node = new SegmentTreeNode(start, end, A[idx++]);
-            return node;
-        }
-        
+        if (start == end)
+            return new SegmentTreeNode(start, end, A[idx++]);
         SegmentTreeNode* l_node = buildHelper(start, start + (end - start) / 2, A, idx);
         SegmentTreeNode* r_node = buildHelper(start + (end - start) / 2 + 1, end, A, idx);
         SegmentTreeNode* node = new SegmentTreeNode(l_node->start, r_node->end, max(l_node->max, r_node->max));
