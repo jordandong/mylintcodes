@@ -43,6 +43,32 @@ Segment Tree
  *     }
  * }
  */
+ 
+class Solution {
+public:
+    /**
+     *@param A: a list of integer
+     *@return: The root of Segment Tree
+     */
+    SegmentTreeNode* build(vector<int>& A) {
+        // write your code here
+        int N = A.size();
+        return buildHelper(0, N - 1, A);
+    }
+    
+    SegmentTreeNode* buildHelper(int start, int end, vector<int>& A) {
+        if (start > end)
+            return NULL;
+        if (start == end)
+            return new SegmentTreeNode(start, end, A[start]);
+        SegmentTreeNode* node = new SegmentTreeNode(start, end, 0);
+        node->left = buildHelper(start, start + (end - start) / 2, A);
+        node->right = buildHelper(start + (end - start) / 2 + 1, end, A);
+        node->max = max(node->left->max, node->right->max);
+        return node;
+    }
+};
+
 class Solution {
 public:
     /**
