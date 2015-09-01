@@ -29,6 +29,7 @@ See wiki: Segment Tree Interval Tree
 Tags Expand 
 Segment Tree
 */
+
 /**
  * Definition of SegmentTreeNode:
  * class SegmentTreeNode {
