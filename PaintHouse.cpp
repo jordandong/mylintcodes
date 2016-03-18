@@ -27,16 +27,15 @@ public:
 
     int minCost(vector<vector<int> >& costs) {
         // Write your code here
-        vector<vector<int> > dp(3, vector<int>(3, 0));
-        int i = 0, j = 0;
+        vector<vector<int> > dp(2, vector<int>(3, 0));
+        int i = 0;
         while(i < costs.size()) {
-            dp[(j + 1) % 3][RED] = costs[i][RED] + min(dp[j % 3][BLUE], dp[j % 3][GREEN]);
-            dp[(j + 1) % 3][BLUE] = costs[i][BLUE] + min(dp[j % 3][RED], dp[j % 3][GREEN]);
-            dp[(j + 1) % 3][GREEN] = costs[i][GREEN] + min(dp[j % 3][RED], dp[j % 3][BLUE]);
+            dp[(i + 1) & 1][RED] = costs[i][RED] + min(dp[i & 1][BLUE], dp[i & 1][GREEN]);
+            dp[(i + 1) & 1][BLUE] = costs[i][BLUE] + min(dp[i & 1][RED], dp[i & 1][GREEN]);
+            dp[(i + 1) & 1][GREEN] = costs[i][GREEN] + min(dp[i & 1][RED], dp[i & 1][BLUE]);
             i++;
-            j++;
         }
-        return min(min(dp[j % 3][RED], dp[j % 3][BLUE]), dp[j % 3][GREEN]);
+        return min(min(dp[i & 1][RED], dp[i & 1][BLUE]), dp[i & 1][GREEN]);
     }
 };
 
