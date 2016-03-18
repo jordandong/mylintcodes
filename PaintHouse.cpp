@@ -27,6 +27,33 @@ public:
 
     int minCost(vector<vector<int> >& costs) {
         // Write your code here
+        vector<vector<int> > dp(3, vector<int>(3, 0));
+        int i = 0, j = 0;
+        while(i < costs.size()) {
+            dp[(j + 1) % 3][RED] = costs[i][RED] + min(dp[j % 3][BLUE], dp[j % 3][GREEN]);
+            dp[(j + 1) % 3][BLUE] = costs[i][BLUE] + min(dp[j % 3][RED], dp[j % 3][GREEN]);
+            dp[(j + 1) % 3][GREEN] = costs[i][GREEN] + min(dp[j % 3][RED], dp[j % 3][BLUE]);
+            i++;
+            j++;
+        }
+        return min(min(dp[j % 3][RED], dp[j % 3][BLUE]), dp[j % 3][GREEN]);
+    }
+};
+
+class Solution {
+public:
+    /**
+     * @param costs n x 3 cost matrix
+     * @return an integer, the minimum cost to paint all houses
+     */
+    enum COLOR {
+        RED,
+        BLUE,
+        GREEN
+    };
+
+    int minCost(vector<vector<int> >& costs) {
+        // Write your code here
         int N = costs.size();
         vector<vector<int> > dp(N + 1, vector<int>(3, 0));
 
