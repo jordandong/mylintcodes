@@ -45,7 +45,7 @@ public:
                     m_color = c; //record the first min value's color
                     m2 = m1; //update second min value
                     m1 = dp[c]; //update the first min value
-	              }
+                }
             }
             p_color = m_color;
             p_m1 = m1;
