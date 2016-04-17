@@ -55,18 +55,13 @@ public:
     ToyFactory() {
         t = NULL;
     }
-    ~ToyFactory() {
-        if (t)
-            delete t;
-    }
+    
     Toy* getToy(string& type) {
         // Write your code here
         if (type == "Dog") {
-            if (!t)
-                t = new Dog();
+            t = new Dog();
         } else if (type == "Cat") {
-            if (!t)
-                t = new Cat();
+            t = new Cat();
         }
         return t;
     }
