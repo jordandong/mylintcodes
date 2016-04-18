@@ -28,7 +28,6 @@ OO Design
 */
 
 //Passed in Local
-// Example program
 #include <iostream>
 #include <string>
 #include <map>
@@ -73,84 +72,107 @@ public:
 
 class Level {
 private:
-    vector<Vehicle* > motoSpots;
-    vector<Vehicle* > compactSpots;
-    vector<Vehicle* > largeSpots;
-    map<Vehicle*, pair<VehicleSize, int>> vehicle2spot;
+    map<Vehicle*, pair<int, int>> vehicle2spot;
+    vector<vector<Vehicle*> > spots;
+    int moto_start;
+    int compact_start;
+    int large_start;
+    int num_rows;
+    int spots_per_row;
 public:
     Level(int num_rows, int spots_per_row) {
-        int motoSpotSize = spots_per_row / 4;
-        motoSpots.resize(motoSpotSize);
-        int compactSpotSize = spots_per_row / 4 * 3 - motoSpotSize;
-        compactSpots.resize(compactSpotSize);
-        int largeSpotSize = spots_per_row - motoSpotSize - compactSpotSize;
-        largeSpots.resize(largeSpotSize);
+        this->num_rows = num_rows;
+        this->spots_per_row = spots_per_row;
+        moto_start = 0;
+        compact_start = spots_per_row / 4;
+        large_start = spots_per_row / 4 * 3;
+        vector<Vehicle*> row_spots(spots_per_row, NULL);
+        spots.resize(num_rows, row_spots);
     }
 
-    int canParkVehicle(Vehicle* vehicle, VehicleSize size, int num) {
-        if (size == VehicleSize::Motorcycle) {
-            for(int i = 0; i < motoSpots.size(); i++) {
-                if (motoSpots[i] == NULL) {
-                    return i;
+    bool ParkVehicleInMoto(Vehicle* vehicle) {
+        for (int r = 0; r < num_rows; r++) {
+            for (int c = moto_start; c < compact_start; c++) {
+                if(spots[r][c] == NULL) {
+                    spots[r][c] = vehicle;
+                    vehicle2spot[vehicle] = make_pair(r, c);
+                    return true;
                 }
             }
-            return -1;
-        } else if (size == VehicleSize::Compact) {
-            for(int i = 0; i < compactSpots.size(); i++) {
-                if (compactSpots[i] == NULL) {
-                    return i;
+        }
+        return false;
+    }
+
+    bool ParkVehicleInCompact(Vehicle* vehicle) {
+        for (int r = 0; r < num_rows; r++) {
+            for (int c = compact_start; c < large_start; c++) {
+                if(spots[r][c] == NULL) {
+                    spots[r][c] = vehicle;
+                    vehicle2spot[vehicle] = make_pair(r, c);
+                    return true;
                 }
             }
-            return -1;
-        } else {
-            for(int i = 0; i < largeSpots.size(); i++) {
-                if (largeSpots[i] == NULL) {
-                    bool flag = true;
-                    for(int j = i; j < i + num; j++) {
-                        if (largeSpots[j] != NULL) {
-                            flag = false;
-                            break;
+        }
+        return false;
+    }
+
+    bool ParkVehicleInLarge(Vehicle* vehicle) {
+        VehicleSize size = vehicle->size();
+        for (int r = 0; r < num_rows; r++) {
+            for (int c = large_start; c < spots_per_row; c++) {
+                if(spots[r][c] == NULL) {
+                    if (size != VehicleSize::Large) {
+                        spots[r][c] = vehicle;
+                        vehicle2spot[vehicle] = make_pair(r, c);
+                        return true;
+                    } else {
+                        if (spots_per_row - c >= 5) {
+                            for (int i = c; i < c + 5; i++) {
+                                spots[r][i] = vehicle;
+                                if (i == c)
+                                    vehicle2spot[vehicle] = make_pair(r, i);
+                            }
+                            return true;
                         }
-                    }
-                    if (flag) {
-                        return i;
+                        break;
                     }
                 }
             }
-            return -1;
         }
+        return false;
     }
 
-    void parkVehicle(Vehicle* vehicle, VehicleSize parkSpotType, int index, int num) {
-        if (parkSpotType == VehicleSize::Motorcycle) {
-            motoSpots[index] = vehicle;
-        } else if (parkSpotType == VehicleSize::Compact) {
-            compactSpots[index] = vehicle;
-        } else {
-            for(int i = index; i < index + num; i++) {
-                largeSpots[i] = vehicle;
+    bool ParkVehicle(Vehicle* vehicle) {
+        VehicleSize size = vehicle->size();
+        if (size == VehicleSize::Motorcycle) {
+            if(!ParkVehicleInMoto(vehicle)) {
+                if(!ParkVehicleInCompact(vehicle)) {
+                    return ParkVehicleInLarge(vehicle);
+                }
             }
-        }
-        vehicle2spot[vehicle] = make_pair(parkSpotType, index);
+            return true;
+        } else if (size == VehicleSize::Compact) {
+            if(!ParkVehicleInCompact(vehicle)) {
+                return ParkVehicleInLarge(vehicle);
+            }
+            return true;
+        } else {
+            return ParkVehicleInLarge(vehicle);
+        }    
     }
 
     void unParkVehicle(Vehicle *vehicle) {
-        pair<VehicleSize, int> spot = vehicle2spot[vehicle];
-        VehicleSize size = spot.first;
-        int index = spot.second;
-        if (size == VehicleSize::Motorcycle) {
-            motoSpots[index] = NULL;
-        } else if (size == VehicleSize::Compact) {
-            compactSpots[index] = NULL;
-        } else {
-            for(int i = index; i < index + largeSpots.size(); i++) {
-                if (largeSpots[i] == vehicle) {
-                    largeSpots[i] = NULL;
-                } else {
-                    break;
-                }
+        pair<int, int> spot = vehicle2spot[vehicle];
+        int r = spot.first;
+        int c = spot.second;
+        for(int i = c; i < c + 5; i++) {
+            if (spots[r][i] == vehicle) {
+                spots[r][i] = NULL;
+            } else {
+                break;
             }
         }
+        vehicle2spot.erase(vehicle);
     }
 };
 
@@ -172,55 +194,14 @@ public:
     // Park the vehicle in a spot (or multiple spots)
     // Return false if failed
     bool parkVehicle(Vehicle &vehicle) {
-        VehicleSize size = vehicle.size();
-        if (size == VehicleSize::Motorcycle) {
-            if (!parkInMotoSpot(vehicle)) {
-                if (!parkInCompactSpot(vehicle)) {
-                    return parkInLargeSpot(vehicle, 1);
-                }
-            }
+        Level *level = vehicle2level[&vehicle];
+        if (level) {
+            cout<<"already parked"<<endl;
             return true;
-        } else if (size == VehicleSize::Compact) {
-            if (!parkInCompactSpot(vehicle)) {
-                return parkInLargeSpot(vehicle, 1);
-            }
-            return true;
-        } else if (size == VehicleSize::Large) {
-            return parkInLargeSpot(vehicle, 5);
-        } else {
-            return false;
         }
-    }
-
-    bool parkInMotoSpot(Vehicle &vehicle) {
-        for(int i = 0; i < levels.size(); i++) {
-            int index = levels[i]->canParkVehicle(&vehicle, VehicleSize::Motorcycle, 1);
-            if (index != -1) {
-                levels[i]->parkVehicle(&vehicle, VehicleSize::Motorcycle, index, 1);
-                vehicle2level[&vehicle] = levels[i];
-                return true;
-            }
-        }
-        return false;
-    }
-
-    bool parkInCompactSpot(Vehicle &vehicle) {
-        for(int i = 0; i < levels.size(); i++) {
-            int index = levels[i]->canParkVehicle(&vehicle, VehicleSize::Compact, 1);
-            if (index != -1) {
-                levels[i]->parkVehicle(&vehicle, VehicleSize::Compact, index, 1);
-                vehicle2level[&vehicle] = levels[i];
-                return true;
-            }
-        }
-        return false;
-    }
-
-    bool parkInLargeSpot(Vehicle &vehicle, int num) {
-        for(int i = 0; i < levels.size(); i++) {
-            int index = levels[i]->canParkVehicle(&vehicle, VehicleSize::Large, num);
-            if (index != -1) {
-                levels[i]->parkVehicle(&vehicle, VehicleSize::Large, index, num);
+        
+        for (int i = 0; i < levels.size(); i++) {
+            if (levels[i]->ParkVehicle(&vehicle)) {
                 vehicle2level[&vehicle] = levels[i];
                 return true;
             }
@@ -233,6 +214,7 @@ public:
         Level *level = vehicle2level[&vehicle];
         if (level) {
             level->unParkVehicle(&vehicle);
+            vehicle2level.erase(&vehicle);
         }
     }
 };
@@ -248,7 +230,7 @@ int main()
     Vehicle *b1 = new Bus();
     Vehicle *b2 = new Bus();
     
-    ParkingLot PL(1,1,11) ;
+    ParkingLot PL (1,1,11) ;
     cout<<PL.parkVehicle(*m1)<<endl;
     cout<<PL.parkVehicle(*c1)<<endl;
     cout<<PL.parkVehicle(*c2)<<endl;
@@ -258,11 +240,13 @@ int main()
     cout<<PL.parkVehicle(*b1)<<endl;
     PL.unParkVehicle(*c5);
     cout<<PL.parkVehicle(*b1)<<endl;
+    cout<<PL.parkVehicle(*b2)<<endl;
     
     return 1;
     
 }
 
+output:
 1
 1
 1
@@ -271,3 +255,5 @@ int main()
 1
 0
 1
+0
+ 
