@@ -53,7 +53,7 @@ private:
             max_numbers[i] = deleteNumber(max_numbers[i + 1]);//O(k)
     }
 
-    vector<int> maxNumber(const vector<int>& nums, int k) {
+    vector<int> maxNumber(const vector<int>& nums, int k) { //O(m), O(n)
         vector<int> res;
         int drop = nums.size() - k;
         for (const auto& num : nums) {
