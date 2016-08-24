@@ -35,21 +35,17 @@ public:
         // Write your code here
         vector<string> nums_copy;
         string res = "";
-        int zero = 0;
         for(int e : nums){
             if(e == 0)
-                zero++; 	
+                continue;
             nums_copy.push_back(to_string(e));
         }
-        if(zero == nums.size())
+        if(0 == nums_copy.size())
             return "0";
 
         sort(nums_copy.begin(), nums_copy.end(), str_cmp);
-        for(auto str : nums_copy) {
-            if (res == "" && str == "0")
-                continue;
+        for(auto str : nums_copy)
             res += str;
-        }
-        return res == "" ? "0" : res;
+        return res;
     }
 };
