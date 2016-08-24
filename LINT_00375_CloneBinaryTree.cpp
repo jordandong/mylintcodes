@@ -65,3 +65,22 @@ public:
         return clone_root;
     }
 };
+
+class Solution {
+public:
+    /**
+     * @param root: The root of binary tree
+     * @return root of new tree
+     */
+    TreeNode* cloneTree(TreeNode *root) {
+        // Write your code here
+        if (root == NULL)
+            return NULL;
+
+        auto clone_root = new TreeNode(root->val);
+        clone_root->left = cloneTree(root->left);
+        clone_root->right = cloneTree(root->right);
+        
+        return clone_root;
+    }
+};
