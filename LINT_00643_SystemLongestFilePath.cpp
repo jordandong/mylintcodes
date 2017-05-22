@@ -33,7 +33,7 @@ Notice
 4. Notice that a/aa/aaa/file1.txt is not the longest file path, if there is another path aaaaaaaaaaaaaaaaaaaaa/sth.png.
 
 Example
-Give input = "dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext" return
+Give input = "dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext" return 20
 
 Tags 
 Google
