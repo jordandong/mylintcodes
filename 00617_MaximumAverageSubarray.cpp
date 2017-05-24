@@ -21,17 +21,34 @@ public:
      */
     double maxAverage(vector<int>& nums, int k) {
         // Write your code here
-        int i = 0, N = nums.size();
-        double sum = 0, mx = 0;
-        for (int j = 0; j < k; j++)
-            sum += nums[j];
-        mx = sum/k;
-        while (i + k < N ) {
-            sum -= nums[i];
-            sum += nums[i + k];
-            i++;
-            mx = max(mx, sum/k);
+        double l = INT_MAX, r = INT_MIN;
+        int N = nums.size();
+        for (int i = 0; i < N; ++i) {
+            if (nums[i] < l)
+                l = nums[i]; //min possible result
+            if (nums[i] > r)
+                r = nums[i]; //max possible result
         }
-        return mx;
+
+        vector<double> sum(N + 1, 0);
+        while (r - l >= 1e-6) {
+            double mid = (l + r) / 2.0; // binary search
+            double min_pre = 0; //
+            bool check = false;
+            for (int i = 1; i <= N; ++i) {
+                sum[i] = sum[i - 1] + nums[i - 1] - mid;
+                if (i >= k && sum[i] - min_pre >= 0) {
+                    check = true;
+                    break;
+                }
+                if (i >= k)
+                    min_pre = min(min_pre, sum[i - k + 1]);
+            }
+            if (check)
+                l = mid;
+            else
+                r = mid;
+        }
+        return l;
     }
 };
