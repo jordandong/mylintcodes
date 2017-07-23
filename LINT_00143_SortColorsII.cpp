@@ -59,3 +59,30 @@ public:
         }
     }
 };
+
+class Solution{
+public:
+    /**
+     * @param colors: A list of integer
+     * @param k: An integer
+     * @return: nothing
+     */    
+    void sortColors2(vector<int> &colors, int k) {
+        // write your code here
+        int bCol = 1, eCol = k;
+        int i = 0, j = colors.size() - 1, m = 0;
+        while (bCol < eCol) {
+            m = i;
+            while (m <= j) {
+                if (colors[m] == bCol)
+                    swap(colors[i++], colors[m++]);
+                else if (colors[m] == eCol)
+                    swap(colors[m], colors[j--]);
+                else
+                    m++;
+            }
+            bCol++;
+            eCol--;
+        }
+    }
+};
