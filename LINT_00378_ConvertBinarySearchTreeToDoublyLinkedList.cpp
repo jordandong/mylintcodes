@@ -62,6 +62,44 @@ private:
         else
             head = cur;
         prev = cur;
+        //head->prev = prev;//circle
+        //prev->next = head;
         bstToDoublyListHelper(root->right, prev, head);
+    }
+};
+
+class Solution {
+public:
+    /**
+     * @param root: The root of tree
+     * @return: the head of doubly list node
+     */
+    DoublyListNode* bstToDoublyList(TreeNode* root) {
+        // Write your code here
+        DoublyListNode *prev = NULL, *head = NULL;
+        stack<TreeNode*> stk;
+        if (root)
+            stk.push(root);
+        while (!stk.empty()) {
+            TreeNode* t = stk.top();
+            if (t->left) {
+                stk.push(t->left);
+                t->left = NULL;
+            } else {
+                stk.pop();
+                DoublyListNode *cur = new DoublyListNode(t->val);
+                cur->prev = prev;
+                if (prev)
+                    prev->next = cur;
+                else
+                    head = cur;
+                prev = cur;
+                //head->prev = prev;//circle
+                //prev->next = head;
+                if (t->right)
+                    stk.push(t->right);
+            }
+        }
+        return head;
     }
 };
