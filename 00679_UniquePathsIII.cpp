@@ -52,3 +52,36 @@ public:
         return res;
     }
 };
+
+class Solution {
+public:
+    /*
+     * @param : an array of arrays
+     * @return: the sum of all unique weighted paths
+     */
+    int uniqueWeightedPaths(vector<vector<int>>& grid) {
+        // write your codes here
+        int m = grid.size();
+        if (m == 0)
+            return 0;
+        int n = grid[0].size();
+        if (n == 0)
+            return 0;
+        unordered_set<int> st;
+        vector<vector<unordered_set<int>>> dp(2, vector<unordered_set<int>>(n + 1, st));
+        dp[0][1].insert(0);
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[(i + 1) % 2][j + 1].clear();
+                for (auto e : dp[(i % 2)][j + 1])
+                    dp[(i + 1) % 2 ][j + 1].insert(e + grid[i][j]);
+                for (auto e : dp[(i + 1) % 2][j])
+                    dp[(i + 1) % 2 ][j + 1].insert(e + grid[i][j]);
+            }
+        }
+        int res = 0;
+        for (auto e : dp[m % 2][n])
+            res += e;
+        return res;
+    }
+};
