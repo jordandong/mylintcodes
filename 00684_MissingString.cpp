@@ -23,9 +23,9 @@ public:
         // Write your code here
         unordered_set<string> st;
         string w = "";
-        for (int j = 0; j < str1.length(); j++) {
-            if ('a' <= str1[j] && str1[j] <= 'z' || 'A' <= str1[j] && str1[j] <= 'Z') {
-               w.push_back(str1[j]); 
+        for (int j = 0; j < str2.length(); j++) {
+            if ('a' <= str2[j] && str2[j] <= 'z' || 'A' <= str2[j] && str2[j] <= 'Z') {
+               w.push_back(str2[j]); 
             } else {
                 if (w != "") {
                     st.insert(w);
@@ -39,22 +39,25 @@ public:
             w = "";
         }
         
-        for (int j = 0; j < str2.length(); j++) {
-            if ('a' <= str2[j] && str2[j] <= 'z' || 'A' <= str2[j] && str2[j] <= 'Z') {
-               w.push_back(str2[j]); 
+        vector<string> res;
+        for (int j = 0; j < str1.length(); j++) {
+            if ('a' <= str1[j] && str1[j] <= 'z' || 'A' <= str1[j] && str1[j] <= 'Z') {
+               w.push_back(str1[j]); 
             } else {
-                if (w != "" && st.find(w) != st.end()) {
-                    st.erase(w);
+                if (w != "") {
+                    if (st.find(w) == st.end())
+                        res.push_back(w);
                     w = "";
                 }
             }
         }
         
-        if (w != "" && st.find(w) != st.end()) {
-            st.erase(w);
+        if (w != "") {
+            if (st.find(w) == st.end())
+                res.push_back(w);
             w = "";
         }
                 
-        return vector<string>(st.begin(), st.end());
+        return res;
     }
 };
