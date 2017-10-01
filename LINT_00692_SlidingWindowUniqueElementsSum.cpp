@@ -6,7 +6,7 @@ Given a array nums = [1, 2, 1, 3, 3] and k = 3
 
 First window [1, 2, 1], only 2 is unique, count is 1.
 Second window [2, 1, 3], all elements unique, count is 3.
-Third window [1,3,3] only 1 is unique, count is 1.
+Third window [1, 3, 3], only 1 is unique, count is 1.
 sum of count = 1 + 3 + 1 = 5
 
 Return 5
@@ -30,9 +30,9 @@ public:
         for (int i = 0; i < nums.size(); i++) {
             q.push(nums[i]);
             ++mp[nums[i]];
-            if (1 == mp[nums[i]])
+            if (1 == mp[nums[i]]) {
                 cur += 1;
-            else if (2 == mp[nums[i]]) {
+            } else if (2 == mp[nums[i]]) {
                 cur -= 1;
             }
             
@@ -46,14 +46,7 @@ public:
                 q.pop();
             }
             if (i + 1 >= k || i == nums.size() - 1) {
-                if (0) {
-                    for (auto it = mp.begin(); it != mp.end(); it++) {
-                        if (it->second == 1)
-                            res++;
-                    }
-                } else {
-                    res += cur;
-                }
+                res += cur;
             }
         }
         return res;
