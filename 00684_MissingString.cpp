@@ -24,7 +24,7 @@ public:
         unordered_set<string> st;
         string w = "";
         for (int j = 0; j < str2.length(); j++) {
-            if ('a' <= str2[j] && str2[j] <= 'z' || 'A' <= str2[j] && str2[j] <= 'Z') {
+            if (str2[j] != ' ') {
                w.push_back(str2[j]); 
             } else {
                 if (w != "") {
@@ -41,7 +41,7 @@ public:
         
         vector<string> res;
         for (int j = 0; j < str1.length(); j++) {
-            if ('a' <= str1[j] && str1[j] <= 'z' || 'A' <= str1[j] && str1[j] <= 'Z') {
+            if (str1[j] != ' ') {
                w.push_back(str1[j]); 
             } else {
                 if (w != "") {
