@@ -20,6 +20,26 @@ public:
      */
     vector<string> binaryTime(int num) {
         // Write your code here
+        vector<string> res;
+        for (int h = 0; h < 12; ++h) {
+            for (int m = 0; m < 60; ++m) {
+                if (bit_count(h) + bit_count(m) == num) {
+                    const auto hour = to_string(h);
+                    const auto minute = m < 10 ? "0" + to_string(m) : to_string(m);
+                    res.push_back(hour + ":" + minute);
+                }
+            }
+        }
+        return res;
+    }
+
+private:
+    int bit_count(int bits) {
+        int count = 0;
+        while (bits) {
+            bits &= bits - 1;
+            ++count;
+        }
+        return count;
     }
 };
-
