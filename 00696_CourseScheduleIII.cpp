@@ -22,6 +22,13 @@ Tags
 Greedy
 */
 
+class comp {
+public:
+    bool operator() (int &a, int &b) {
+        return a < b;
+    }
+};
+
 class Solution {
 public:
     /*
@@ -30,5 +37,25 @@ public:
      */
     int scheduleCourse(vector<vector<int>> &courses) {
         // write your code here
+        int N = courses.size();
+        if (N < 1)
+            return 0;
+        sort(courses.begin(), courses.end(), 
+                [](vector<int> a, vector<int> b) {
+                    return a.back() < b.back();
+                }); //sort by allowed closed date
+        
+        priority_queue<int, vector<int>, comp> q; //keep longest course on top
+        int cur_date_end = 0;
+        for (int i = 0; i < N; i++) {
+            cur_date_end += courses[i][0];
+            q.push(courses[i][0]);
+            //while (cur_date_end > courses[i][1]) {
+            if (cur_date_end > courses[i][1]) {
+                cur_date_end -= q.top(); //remove longest course
+                q.pop();
+            }
+        }
+        return q.size();
     }
 };
