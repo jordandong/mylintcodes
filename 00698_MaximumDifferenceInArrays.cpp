@@ -13,7 +13,7 @@ Return 4
 
 One way to reach the maximum difference 4 is to pick 1 in the first or third array and pick 5 in the second array.
 Tags 
-Hash Table Array Yahoo
+Array Hash Table Yahoo
 */
 
 class Solution {
@@ -24,5 +24,16 @@ public:
      */
     int maxDiff(vector<vector<int>> &arrs) {
         // write your code here
+        int N = arrs.size();
+        if (N < 2)
+            return 0;
+        int mi = arrs[0][0], mx = arrs[0].back(), res = 0;
+        for (int i = 1; i < N; i++) {
+            res = max(abs(mx - arrs[i][0]), res);
+            res = max(abs(arrs[i].back() - mi), res);
+            mi = min(mi, arrs[i][0]);
+            mx = max(mx, arrs[i].back());
+        }
+        return res;
     }
 };
