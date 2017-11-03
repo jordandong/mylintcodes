@@ -53,6 +53,47 @@ public:
      */
     vector<int> folding(vector<int> &nums, vector<int> &req) {
         // write your code here
+        int m = 1, n = nums.size();
+        for (auto flap : req) {
+            foldingHelper(nums, m, n, flap);
+            m *= 2;
+            n /= 2;
+        }
+        return nums;
+    }
+    
+private:
+    void foldingHelper(vector<int> &nums, int m, int n, int flap) {
+        int r = m, c = n / 2;
+        while (r > 1) {
+            //swap halves in each row, then every other row
+            //make sure the first half/ second half in each row are grouped
+            for (int i = 0; i < r; i += 2) {
+                for (int j = 0; j < c; j++)
+                    swap(nums[i * c * 2 + c + j], nums[(i + 1) * c * 2 + j]);
+            }
+            c *= 2;
+            r /= 2;
+        }
+        
+        if (flap) { //if right to left, swap halves
+            for (int i = 0; i < nums.size() / 2; i++)
+                swap(nums[i], nums[i + nums.size() / 2]);
+        }
+        //revese first half
+        reverse(nums.begin(), nums.begin() + nums.size() / 2);
+    }
+};
+
+class Solution {
+public:
+    /*
+     * @param : the original array
+     * @param : the direction each time
+     * @return: the final folded array 
+     */
+    vector<int> folding(vector<int> &nums, vector<int> &req) {
+        // write your code here
         vector<vector<int>> data(1, nums);
         vector<vector<int>> res;
         vector<int> ans;
