@@ -30,5 +30,57 @@ public:
      */
     int LongestPathWithSameValue(vector<int> &A, vector<int> &E) {
         // write your code here
+        int n = A.size();
+        if (n == 0)
+            return 0;
+        map<int, set<int>> edges;
+        for (int j = 0; j < n; j++) {
+            if (E[j*2 + 1] == E[j * 2])
+                continue;
+            edges[E[j*2]].insert(E[j*2 + 1]);
+            edges[E[j*2 + 1]].insert(E[j*2]);
+        }
+        int res = 0;
+        DFS(0, 1, A, edges, res);
+        return res;
+    }
+    
+    vector<int> DFS(int parent, int node, vector<int> &A, map<int, set<int>> &edges, int &res) {
+        if (edges[node].size() == 1 && *(edges[node].begin()) == parent)
+            return {0, A[node - 1]};
+        vector<vector<int>> childs;
+        for (auto it : edges[node]) {
+            int child = it;
+            if (child == parent)
+                continue;
+            childs.push_back(DFS(node, child, A, edges, res));
+        }
+        
+        if (childs.size() == 1) {
+            if (childs[0][1] == A[node - 1]) {
+                childs[0][0]++;
+                res = max(res, childs[0][0]);
+                return childs[0];
+            } else {
+                return {0, A[node - 1]};
+            }
+        } else {
+            if (childs[0][1] == A[node - 1] && childs[1][1] == A[node - 1]) {
+                childs[0][0]++;
+                childs[1][0]++;
+                res = max(res, childs[0][0] + childs[1][0]);
+                return childs[0][0] > childs[1][0] ? childs[0] : childs[1];
+            } else if (childs[0][1] == A[node - 1]) {
+                childs[0][0]++;
+                res = max(res, childs[0][0]);
+                return childs[0];
+            } else if (childs[1][1] == A[node - 1]) {
+                childs[1][0]++;
+                res = max(res, childs[1][0]);
+                return childs[1];
+            } else {
+                return {0, A[node - 1]};
+            }
+        }
     }
 };
