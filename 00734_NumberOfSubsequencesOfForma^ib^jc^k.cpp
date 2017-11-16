@@ -15,3 +15,26 @@ Tags
 Mathematics Amazon
 */
 
+class Solution {
+public:
+    /*
+     * @param : the input string
+     * @return: the number of subsequences 
+     */
+    int countSubsequences(string &source) {
+        // write your code here
+        int n = source.length();
+        int sa = 0, sb = 0, sc = 0;
+        int res = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            if (source[i] == 'c') {
+                sc = sc + sc + 1; //start with c = using current c + not using current c
+            } else if (source[i] == 'b') {
+                sb = sc + sb + sb;
+            } else {
+                sa = sb + sa + sa;
+            }
+        }
+        return sa;
+    }
+};
